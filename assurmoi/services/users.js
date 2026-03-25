@@ -1,30 +1,38 @@
-const getAllUsers = (req, res) => {
+const { User } = require("../models");
+
+const getAllUsers = async (req, res) => {
+  const users = await User.findAll();
   res.status(200).json({
-    users: [],
+    users,
   });
 };
 
-const getUser = (req, res) => {
+const getUser = async (req, res) => {
+  const user = await User.findByPk(req.params.id);
   res.status(200).json({
-    user: req.params.id,
+    user,
   });
 };
 
-const createUser = (req, res) => {
-  const user = req.body;
+const createUser = async (req, res) => {
+  const user = await User.create(req.body);
   res.status(201).json({
     user,
   });
 };
 
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
+  const user = await User.findByPk(req.params.id);
+  await user.update(req.body);
   res.status(200).json({
     message: "Successfully updated",
-    user: req.body,
+    user,
   });
 };
 
-const deleteUser = (req, res) => {
+const deleteUser = async (req, res) => {
+  const user = await User.findByPk(req.params.id);
+  await user.destroy();
   res.status(200).json({
     message: "Successfully deleted",
   });

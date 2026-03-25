@@ -9,7 +9,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    queryInterface.createTable("users", {
+    queryInterface.createTable("Users", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -17,7 +17,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       username: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: false,
       },
       password: {
@@ -25,26 +25,20 @@ module.exports = {
         allowNull: false,
       },
       firstname: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: true,
       },
       lastname: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: true,
       },
       email: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
       },
     });
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
-    await queryInterface.dropTable("users");
+    await queryInterface.dropTable("Users");
   },
 };

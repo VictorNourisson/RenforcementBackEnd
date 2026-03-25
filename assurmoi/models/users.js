@@ -31,12 +31,12 @@ const User = (dbInstance, DataTypes) => {
       },
       email: {
         type: DataTypes.STRING(50),
-        allowNull: true,
       },
     },
     {
       sequelize: dbInstance,
       modelName: "User",
+      timestamps: false,
     },
   );
   return User;
