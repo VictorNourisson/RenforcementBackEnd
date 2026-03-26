@@ -1,4 +1,4 @@
-const { Request, History, Document } = require("../models");
+const { Request, History, Document, Sinister } = require("../models");
 
 const getAllRequests = async (req, res) => {
   const { sinister_id, status, closed } = req.query;
@@ -17,6 +17,44 @@ const getRequest = async (req, res) => {
 };
 
 const createRequest = async (req, res) => {
+  const {
+    sinister_id,
+    cni_driver,
+    vehicle_registration_certificate,
+    insurance_certificate,
+    diagnostic_report_file,
+    case1_contractor_invoice,
+    case2_insured_rib,
+  } = req.body;
+
+  // Check if referenced sinister exists
+  if (sinister_id) {
+    const sinister = await Sinister.findByPk(sinister_id);
+    if (!sinister) {
+      return res.status(400).json({
+        message: "Création de la demande impossible : le sinistre n'existe pas",
+      });
+    }
+  }
+
+  // Check if referenced documents exist
+  const documentIds = [
+    cni_driver,
+    vehicle_registration_certificate,
+    insurance_certificate,
+    diagnostic_report_file,
+    case1_contractor_invoice,
+    case2_insured_rib,
+  ].filter((id) => id);
+  for (const docId of documentIds) {
+    const doc = await Document.findByPk(docId);
+    if (!doc) {
+      return res.status(400).json({
+        message: `Création de la demande impossible : le document ${docId} n'existe pas`,
+      });
+    }
+  }
+
   const request = await Request.create(req.body);
   res.status(201).json({ request });
 };

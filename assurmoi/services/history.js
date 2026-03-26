@@ -1,4 +1,4 @@
-const { History } = require("../models");
+const { History, Request, Sinister, User } = require("../models");
 
 const getAllHistories = async (req, res) => {
   const { request_id, sinister_id, user_id } = req.query;
@@ -17,6 +17,39 @@ const getHistory = async (req, res) => {
 };
 
 const createHistory = async (req, res) => {
+  const { request_id, sinister_id, user_id } = req.body;
+
+  // Check if referenced entities exist
+  if (request_id) {
+    const request = await Request.findByPk(request_id);
+    if (!request) {
+      return res.status(400).json({
+        message:
+          "Création de l'historique impossible : la demande n'existe pas",
+      });
+    }
+  }
+
+  if (sinister_id) {
+    const sinister = await Sinister.findByPk(sinister_id);
+    if (!sinister) {
+      return res.status(400).json({
+        message:
+          "Création de l'historique impossible : le sinistre n'existe pas",
+      });
+    }
+  }
+
+  if (user_id) {
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return res.status(400).json({
+        message:
+          "Création de l'historique impossible : l'utilisateur n'existe pas",
+      });
+    }
+  }
+
   const history = await History.create(req.body);
   res.status(201).json({ history });
 };
