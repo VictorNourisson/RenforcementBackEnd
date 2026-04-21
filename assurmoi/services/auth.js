@@ -1,6 +1,7 @@
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { sendEmail } = require("./mail");
 
 const JWT_SECRET = process.env.JWT_SECRET || "change-this-secret";
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
@@ -28,14 +29,24 @@ const login = async (req, res) => {
     return res.status(403).json({ message: "User is deactivated" });
   }
 
-  const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES_IN,
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  await user.update({ two_step_code: code });
+
+  try {
+    await sendEmail(
+      user.email,
+      "Code de vérification 2FA",
+      `Votre code de vérification est : ${code}`,
+    );
+  } catch (error) {
+    return res.status(500).json({ message: "Erreur envoi email" });
+  }
+
+  const tempToken = jwt.sign({ id: user.id, type: "2fa" }, JWT_SECRET, {
+    expiresIn: "5m",
   });
 
-  // Optionnel : pour prise en charge de blacklisting côté base (voir logout)
-  await user.update({ token });
-
-  res.status(200).json({ token, expiresIn: JWT_EXPIRES_IN });
+  res.status(200).json({ message: "Code 2FA envoyé par email", tempToken });
 };
 
 const logout = async (req, res) => {
