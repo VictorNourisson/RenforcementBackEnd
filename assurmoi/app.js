@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: allowedOrigins,
+    origin: true,
   }),
 );
 app.use(apiLimiter);
