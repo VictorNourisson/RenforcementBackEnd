@@ -42,11 +42,11 @@ const login = async (req, res) => {
     return res.status(500).json({ message: "Erreur envoi email" });
   }
 
-  const tempToken = jwt.sign({ id: user.id, type: "2fa" }, JWT_SECRET, {
+  const token = jwt.sign({ id: user.id, type: "2fa" }, JWT_SECRET, {
     expiresIn: "5m",
   });
 
-  res.status(200).json({ message: "Code 2FA envoyé par email", tempToken });
+  res.status(200).json({ token });
 };
 
 const logout = async (req, res) => {

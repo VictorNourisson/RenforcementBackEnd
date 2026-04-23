@@ -1,31 +1,37 @@
-import React, { useState } from "react";
-import { Text, View } from "react-native";
-import { Button, Card, HelperText, TextInput } from "react-native-paper";
+import React, { useContext, useState } from "react";
+import { View } from "react-native";
+import { Button, Card, HelperText, Text, TextInput } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserContext } from "@/contexts/UserContext";
+import { jwtDecode } from "jwt-decode";
+import { useRouter } from "expo-router";
+import fetchData from "@/hooks/fetchData";
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000";
+type JwtPayload = {
+  user: {};
+};
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [mot_de_passe, setMotDePasse] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const { setUser } = useContext(UserContext);
+  const router = useRouter();
 
   const login = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          mot_de_passe,
-        }),
-      });
-      if (!response.ok) setError("Echec de connexion");
-      console.log("login : ", response);
-      const { token } = await response.json();
+      const { token } = await fetchData(
+        "/auth/login",
+        "POST",
+        { email, mot_de_passe },
+        false,
+      );
+      console.log("token : ", token);
       await AsyncStorage.setItem("token", token);
+      const user = jwtDecode<JwtPayload>(token);
+      console.log("user : ", user);
+      setUser(user);
+      router.push({ pathname: "/" });
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An unknown error occurred",
@@ -41,6 +47,7 @@ export default function LoginScreen() {
         <TextInput label="identifiant" onChangeText={setEmail}></TextInput>
         <TextInput
           label="mot de passe"
+          secureTextEntry
           onChangeText={setMotDePasse}
         ></TextInput>
         <HelperText type="error" visible={Boolean(error)}>

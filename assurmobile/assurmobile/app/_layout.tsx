@@ -9,6 +9,7 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="index" options={{ title: "Homepage" }} />
           <Stack.Screen name="login" options={{ title: "Connexion" }} />
+          <Stack.Screen name="sinistre/[id]" options={{ title: "Sinistre"}} />
         </Stack>
       </UserProvider>
     </PaperProvider>
