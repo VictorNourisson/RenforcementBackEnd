@@ -1,6 +1,23 @@
-pour lancer l'application : docker compose run --service-ports app-assurmoi-node npm run dev
+Lancement de l'application : 
 
-Pour avoir accès au swagger :
+    docker compose up -d
+
+Installation :
+
+    docker compose run app-assurmoi-app npm i
+    docker compose run app-assurmoi-node npm i
+
+BDD :
+
+    docker compose run app-assurmoi-node npx sequelize-cli db:migrate
+    docker compose run app-assurmoi-node npx sequelize-cli db:seed:all
+
+Si localhost:8081 semble bloquer ou indisponible : 
+
+    arrêter les conteneurs docker, les supprimer et relancer
+
+
+Swagger :
 http://localhost:3000/api-docs/
 
 page login : <img width="1209" height="2625" alt="Capture d’écran 2026-04-24 à 15 11 04" src="https://github.com/user-attachments/assets/140713a6-ca9a-4940-8e05-c57e8babeceb" />
