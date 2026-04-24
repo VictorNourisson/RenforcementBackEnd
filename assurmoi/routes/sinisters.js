@@ -9,9 +9,12 @@ const {
   deleteSinister,
   validateSinister,
   updateDocuments,
+  createSinisterDocuments,
   getRequest,
   getHistory,
   createRequest,
+  uploadDocumentToSinister,
+  downloadDocument,
 } = require("../services/sinisters");
 
 router.get("/", getAllSinisters);
@@ -21,8 +24,11 @@ router.put("/:id", updateSinister);
 router.delete("/:id", deleteSinister);
 router.patch("/:id/validate", validateSinister);
 router.patch("/:id/documents", updateDocuments);
+router.post("/:id/documents", createSinisterDocuments);
+router.post("/:id/upload-document", uploadDocumentToSinister);
 router.get("/:id/request", getRequest);
 router.get("/:id/history", getHistory);
 router.post("/:id/create-request", createRequest);
+router.get("/download/:filename", downloadDocument);
 
 module.exports = router;

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button, Card, HelperText, Text, TextInput } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserContext } from "@/contexts/UserContext";
@@ -41,22 +41,64 @@ export default function LoginScreen() {
   };
 
   return (
-    <View>
-      <Card.Content>
-        <Text>Connection</Text>
-        <TextInput label="identifiant" onChangeText={setEmail}></TextInput>
-        <TextInput
-          label="mot de passe"
-          secureTextEntry
-          onChangeText={setMotDePasse}
-        ></TextInput>
-        <HelperText type="error" visible={Boolean(error)}>
-          {error}
-        </HelperText>
-        <Button mode="contained" onPress={login}>
-          Se connecter
-        </Button>
-      </Card.Content>
+    <View style={styles.container}>
+      <Card style={styles.card}>
+        <Card.Content>
+          <Text variant="headlineSmall" style={styles.title}>
+            Connexion
+          </Text>
+          <Text variant="bodyMedium" style={styles.subtitle}>
+            Connecte-toi pour accéder à tes sinistres.
+          </Text>
+          <TextInput
+            label="identifiant"
+            mode="outlined"
+            style={styles.input}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            label="mot de passe"
+            mode="outlined"
+            secureTextEntry
+            style={styles.input}
+            onChangeText={setMotDePasse}
+          />
+          <HelperText type="error" visible={Boolean(error)}>
+            {error}
+          </HelperText>
+          <Button mode="contained" onPress={login}>
+            Se connecter
+          </Button>
+        </Card.Content>
+      </Card>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 16,
+    backgroundColor: "#F5F6FB",
+  },
+  card: {
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#E7E3F5",
+    backgroundColor: "#FFFFFF",
+  },
+  title: {
+    fontWeight: "700",
+    color: "#2A2440",
+    marginBottom: 4,
+  },
+  subtitle: {
+    color: "#6A647E",
+    marginBottom: 14,
+  },
+  input: {
+    marginBottom: 10,
+    backgroundColor: "#FFFFFF",
+  },
+});

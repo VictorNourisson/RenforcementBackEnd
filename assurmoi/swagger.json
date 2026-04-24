@@ -938,6 +938,50 @@
           }
         },
         "tags": ["sinisters"]
+      },
+      "post": {
+        "summary": "Associer des fichiers existants au sinistre",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cni_driver": {
+                    "type": "integer"
+                  },
+                  "vehicle_registration_certificate": {
+                    "type": "integer"
+                  },
+                  "insurance_certificate": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "example": {
+                "cni_driver": 10,
+                "vehicle_registration_certificate": 11,
+                "insurance_certificate": 12
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Fichiers existants associés au sinistre"
+          }
+        },
+        "tags": ["sinisters"]
       }
     },
     "/api/sinisters/{id}/request": {
